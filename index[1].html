@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Reply Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #E8341A;
+  --accent2: #185FA5;
+  --bg: #0f0f0f;
+  --bg2: #181818;
+  --bg3: #222222;
+  --border: rgba(255,255,255,0.08);
+  --text: #f0f0f0;
+  --text2: #999;
+  --text3: #555;
+  --card: #1c1c1c;
+  --input-bg: #151515;
+  --green: #1DB87A;
+  --green-bg: rgba(29,184,122,0.1);
+  --tip-bg: rgba(24,95,165,0.15);
+  --tip-text: #7ab8f5;
+  --blank-bg: rgba(232,52,26,0.12);
+  --blank-border: rgba(232,52,26,0.35);
+  --blank-text: #f08070;
+  --shadow: 0 4px 24px rgba(0,0,0,0.5);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+  --radius: 14px;
+  --radius-sm: 9px;
+}
+.light {
+  --bg: #f0eeeb;
+  --bg2: #e8e5e1;
+  --bg3: #dedad5;
+  --border: rgba(0,0,0,0.09);
+  --text: #1a1a1a;
+  --text2: #555;
+  --text3: #999;
+  --card: #ffffff;
+  --input-bg: #f8f6f3;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --tip-bg: rgba(24,95,165,0.08);
+  --tip-text: #0C447C;
+  --blank-bg: rgba(232,52,26,0.07);
+  --blank-border: rgba(232,52,26,0.3);
+  --blank-text: #c0391a;
+}
+.accent-blue   { --accent: #185FA5; }
+.accent-green  { --accent: #1DB87A; }
+.accent-red    { --accent: #E8341A; }
+.accent-orange { --accent: #E07B2A; }
+.accent-purple { --accent: #7C5CBF; }
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background 0.3s,color 0.3s;min-height:100vh;}
+
+.screen{display:none;min-height:100vh;}
+.screen.active{display:flex;flex-direction:column;}
+
+/* PROFILE SCREEN */
+#profileScreen{align-items:center;justify-content:center;padding:2rem 1rem;background:var(--bg);position:relative;overflow:hidden;}
+#profileScreen::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(232,52,26,0.06) 0%,transparent 70%);top:-200px;right:-200px;pointer-events:none;}
+#profileScreen::after{content:'';position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(24,95,165,0.07) 0%,transparent 70%);bottom:-100px;left:-100px;pointer-events:none;}
+.profile-screen-inner{width:100%;max-width:560px;position:relative;z-index:1;}
+.app-title{text-align:center;margin-bottom:2.5rem;animation:fadeUp 0.5s ease both;}
+.app-title h1{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--text);line-height:1.2;}
+.app-title .subtitle{font-size:13px;color:var(--text3);margin-top:6px;}
+.facility-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent2);background:rgba(24,95,165,0.12);padding:4px 12px;border-radius:20px;}
+.light .facility-tag{background:rgba(24,95,165,0.1);}
+
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.15rem;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:13px;animation:fadeUp 0.5s ease both;box-shadow:var(--shadow-sm);}
+.profile-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow);}
+.profile-card:active{transform:scale(0.97);}
+.p-avatar{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
+.p-name{font-size:16px;font-weight:600;color:var(--text);}
+.p-picks{font-size:10px;color:var(--accent);margin-top:3px;font-weight:500;}
+
+.add-profile-btn{width:100%;background:var(--bg2);border:1px dashed var(--border);border-radius:var(--radius);padding:0.9rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.18s;animation:fadeUp 0.5s ease 0.3s both;}
+.add-profile-btn:hover{border-color:var(--accent);color:var(--accent);}
+.add-profile-btn:active{transform:scale(0.97);}
+.built-by{text-align:center;margin-top:1.75rem;font-size:11px;color:var(--text3);animation:fadeUp 0.5s ease 0.4s both;}
+.built-by span{color:var(--text2);}
+.version-tag{font-size:10px;color:var(--text3);margin-top:4px;opacity:0.5;}
+
+/* TOPBAR */
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0.8rem 1.25rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);}
+.topbar-left{display:flex;align-items:center;gap:11px;}
+.t-avatar{width:35px;height:35px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.t-name{font-size:14px;font-weight:600;color:var(--text);line-height:1.2;}
+.t-facility{font-size:11px;color:var(--text3);}
+.topbar-right{display:flex;align-items:center;gap:7px;}
+.icon-btn{width:33px;height:33px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text2);font-size:15px;transition:all 0.15s;font-family:inherit;}
+.icon-btn:hover{background:var(--bg3);color:var(--text);border-color:var(--accent);}
+.icon-btn:active{transform:scale(0.9);}
+.switch-btn{font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);cursor:pointer;color:var(--text2);font-family:inherit;transition:all 0.15s;white-space:nowrap;}
+.switch-btn:hover{border-color:var(--accent);color:var(--accent);}
+.switch-btn:active{transform:scale(0.95);}
+
+.app-body{max-width:860px;margin:0 auto;padding:1.25rem 1rem 3rem;}
+
+/* SETTINGS */
+.settings-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1rem;display:none;animation:slideDown 0.2s ease;box-shadow:var(--shadow-sm);}
+.settings-panel.open{display:block;}
+.s-title{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:13px;}
+.s-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.s-row:last-child{margin-bottom:0;}
+.s-label{font-size:13px;color:var(--text2);}
+.toggle-row{display:flex;gap:6px;}
+.tog{padding:5px 12px;border-radius:7px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text3);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.tog:active{transform:scale(0.92);}
+.tog.active{background:var(--accent);border-color:var(--accent);color:white;}
+.colour-dots{display:flex;gap:8px;}
+.cdot{width:22px;height:22px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all 0.15s;}
+.cdot:hover{transform:scale(1.15);}
+.cdot.active{border-color:var(--text);transform:scale(1.18);}
+.style-input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 12px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border-color 0.15s;}
+.style-input:focus{border-color:var(--accent);}
+.style-input::placeholder{color:var(--text3);opacity:0.5;font-style:italic;}
+
+/* TOPIC BAR */
+.topic-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:1rem;}
+.topic-tag{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.topic-tag:hover{border-color:var(--accent);color:var(--accent);}
+.topic-tag:active{transform:scale(0.93);}
+.topic-tag.active{background:var(--accent);border-color:var(--accent);color:white;}
+
+/* PANELS */
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+@media(max-width:600px){.main-grid{grid-template-columns:1fr;}.profile-grid{grid-template-columns:1fr;}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;box-shadow:var(--shadow-sm);}
+.p-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;}
+textarea{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:13.5px;font-family:'DM Sans',sans-serif;color:var(--text);resize:none;outline:none;line-height:1.65;transition:border-color 0.15s;}
+textarea:focus{border-color:var(--accent);}
+textarea::placeholder{color:var(--text3);}
+.gen-btn{width:100%;margin-top:10px;padding:11px;background:var(--accent);color:white;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;letter-spacing:0.01em;}
+.gen-btn:hover{opacity:0.88;transform:translateY(-1px);box-shadow:0 4px 14px rgba(0,0,0,0.35);}
+.gen-btn:active{transform:scale(0.98);opacity:1;}
+.gen-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none;box-shadow:none;}
+.status-text{font-size:11px;color:var(--text3);margin-top:7px;min-height:16px;}
+.profile-stat{font-size:13px;color:var(--text2);line-height:1.7;}
+.profile-stat strong{color:var(--text);}
+.picks-row{font-size:11px;color:var(--text3);margin-top:4px;}
+.divider-line{border:none;border-top:1px solid var(--border);margin:11px 0;}
+
+/* REPLIES */
+.replies-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;display:none;box-shadow:var(--shadow-sm);animation:fadeUp 0.3s ease;}
+.replies-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.reset-btn{font-size:12px;font-weight:500;padding:6px 13px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--text3);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.reset-btn:hover{border-color:var(--accent);color:var(--accent);}
+.reset-btn:active{transform:scale(0.93);}
+.tip-box{background:var(--tip-bg);border-radius:var(--radius-sm);padding:9px 13px;font-size:12px;color:var(--tip-text);margin-bottom:12px;line-height:1.55;border-left:3px solid var(--accent2);}
+.loading-state{text-align:center;padding:2.5rem;color:var(--text3);font-size:14px;}
+.dot{display:inline-block;animation:blink 1.2s infinite;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+.reply-card{border:1px solid var(--border);border-radius:var(--radius-sm);padding:1rem 1.1rem;margin-bottom:10px;background:var(--bg2);transition:all 0.2s;animation:fadeUp 0.3s ease both;}
+.reply-card:nth-child(2){animation-delay:0.07s;}
+.reply-card:nth-child(3){animation-delay:0.14s;}
+.reply-card.selected{border-color:var(--green);background:var(--green-bg);}
+.rc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.reply-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:0.05em;}
+.badge-friendly{background:rgba(29,184,122,0.15);color:#1DB87A;}
+.badge-professional{background:rgba(24,95,165,0.18);color:#7ab8f5;}
+.badge-brief{background:rgba(232,52,26,0.15);color:#f08070;}
+.light .badge-professional{color:#185FA5;}
+.light .badge-brief{color:#c0391a;}
+.reply-text{font-size:12.5px;color:var(--text);line-height:1.8;white-space:pre-wrap;font-family:'DM Mono',monospace;}
+.blank-field{background:var(--blank-bg);border:1px dashed var(--blank-border);border-radius:4px;padding:1px 6px;color:var(--blank-text);font-style:italic;font-family:'DM Sans',sans-serif;font-size:12px;}
+.edit-area{width:100%;min-height:120px;display:none;margin-top:10px;font-family:'DM Mono',monospace;font-size:12.5px;resize:vertical;}
+.rc-actions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap;}
+.a-btn{padding:7px 14px;font-size:12px;font-weight:500;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.a-btn:hover{background:var(--bg2);color:var(--text);}
+.a-btn:active{transform:scale(0.92);}
+.a-btn.use{background:var(--green);border-color:var(--green);color:white;}
+.a-btn.use:hover{opacity:0.85;}
+.a-btn.copy{margin-left:auto;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;z-index:999;display:none;backdrop-filter:blur(4px);}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;width:90%;max-width:370px;box-shadow:var(--shadow);animation:fadeUp 0.2s ease;}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:5px;color:var(--text);}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:14px;}
+.modal input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:9px;transition:border-color 0.15s;}
+.modal input:focus{border-color:var(--accent);}
+.modal input:disabled{opacity:0.4;}
+.modal-btns{display:flex;gap:8px;}
+.m-btn{flex:1;padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:inherit;transition:all 0.15s;}
+.m-btn:active{transform:scale(0.95);}
+.m-btn.primary{background:var(--accent);border-color:var(--accent);color:white;}
+.m-btn.primary:hover{opacity:0.88;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes blink{0%,80%,100%{opacity:0}40%{opacity:1}}
+.profile-card:nth-child(1){animation-delay:0.05s}
+.profile-card:nth-child(2){animation-delay:0.1s}
+.profile-card:nth-child(3){animation-delay:0.15s}
+.profile-card:nth-child(4){animation-delay:0.2s}
+.profile-card:nth-child(5){animation-delay:0.25s}
+.profile-card:nth-child(6){animation-delay:0.3s}
+</style>
+</head>
+<body>
+
+<!-- PROFILE SELECT SCREEN -->
+<div id="profileScreen" class="screen active">
+  <div class="profile-screen-inner">
+    <div class="app-title">
+      <h1>Email Reply Assistant</h1>
+      <div class="subtitle">Who's on shift today?</div>
+      <div class="facility-tag">Glen Innes Pool &amp; Leisure Centre</div>
+    </div>
+    <div class="profile-grid" id="profileGrid"></div>
+    <button class="add-profile-btn" onclick="openAddModal()">
+      <span style="font-size:18px;line-height:1">+</span> Add new staff profile
+    </button>
+    <div class="built-by">Built by <span>Ryan Dukeson</span><div class="version-tag">v1.0</div></div>
+  </div>
+</div>
+
+<!-- MAIN APP SCREEN -->
+<div id="appScreen" class="screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="t-avatar" id="topbarAvatar"></div>
+      <div>
+        <div class="t-name" id="topbarName"></div>
+        <div class="t-facility">Glen Innes Pool &amp; Leisure</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="toggleSettings()" title="Settings">⚙</button>
+      <button class="switch-btn" onclick="switchUser()">Switch user</button>
+    </div>
+  </div>
+
+  <div class="app-body">
+
+    <div class="settings-panel" id="settingsPanel">
+      <div class="s-title">Your preferences</div>
+      <div class="s-row">
+        <div class="s-label">Theme</div>
+        <div class="toggle-row">
+          <button class="tog" id="themeDark" onclick="setTheme('dark')">Dark</button>
+          <button class="tog" id="themeLight" onclick="setTheme('light')">Light</button>
+        </div>
+      </div>
+      <div class="s-row">
+        <div class="s-label">Accent colour</div>
+        <div class="colour-dots">
+          <div class="cdot" style="background:#E8341A" data-accent="red"    onclick="setAccent('red')"    title="Red"></div>
+          <div class="cdot" style="background:#185FA5" data-accent="blue"   onclick="setAccent('blue')"   title="Blue"></div>
+          <div class="cdot" style="background:#1DB87A" data-accent="green"  onclick="setAccent('green')"  title="Green"></div>
+          <div class="cdot" style="background:#E07B2A" data-accent="orange" onclick="setAccent('orange')" title="Orange"></div>
+          <div class="cdot" style="background:#7C5CBF" data-accent="purple" onclick="setAccent('purple')" title="Purple"></div>
+        </div>
+      </div>
+      <div class="s-row" style="align-items:flex-start;flex-direction:column;gap:8px;">
+        <div class="s-label">Reply mood</div>
+        <input class="style-input" id="styleInput" type="text" placeholder="choose your reply mood..." maxlength="80" oninput="saveStyle()" />
+      </div>
+    </div>
+
+    <div class="topic-bar">
+      <button class="topic-tag active" data-topic="">All topics</button>
+      <button class="topic-tag" data-topic="Membership cancellation">Cancellation</button>
+      <button class="topic-tag" data-topic="Membership suspension or freeze">Suspension</button>
+      <button class="topic-tag" data-topic="Class or timetable enquiry">Class enquiry</button>
+      <button class="topic-tag" data-topic="Pool hire or birthday party">Pool hire</button>
+      <button class="topic-tag" data-topic="Membership pricing or joining">Membership info</button>
+      <button class="topic-tag" data-topic="Swim school or learn to swim">Swim school</button>
+      <button class="topic-tag" data-topic="General enquiry">General</button>
+    </div>
+
+    <div class="main-grid">
+      <div class="panel">
+        <div class="p-label">Paste incoming email</div>
+        <textarea id="emailInput" rows="10" placeholder="Paste the customer's email here...&#10;&#10;e.g. Hi, I'd like to suspend my membership..."></textarea>
+        <button class="gen-btn" id="genBtn" onclick="generateReplies()">Generate reply options</button>
+        <div class="status-text" id="statusText"></div>
+      </div>
+      <div class="panel">
+        <div class="p-label">Your profile</div>
+        <div class="profile-stat" id="profileStat"></div>
+        <hr class="divider-line">
+        <div class="p-label">Picks recorded: <span id="pickCount">0</span></div>
+        <div class="picks-row" id="picksRow"></div>
+      </div>
+    </div>
+
+    <div class="replies-wrap" id="repliesWrap">
+      <div class="replies-header">
+        <div class="p-label" style="margin:0">Reply options — pick one, edit if needed, then copy</div>
+        <button class="reset-btn" onclick="resetScreen()">↩ Start over</button>
+      </div>
+      <div class="tip-box" id="tipBox" style="display:none"></div>
+      <div id="repliesContainer"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Add staff modal -->
+<div class="modal-overlay" id="addModal">
+  <div class="modal">
+    <h3 id="modalTitle">Add staff profile</h3>
+    <p id="modalDesc">Enter the name for the new staff member.</p>
+    <input type="text" id="modalName" placeholder="Full name" />
+    <div class="modal-btns">
+      <button class="m-btn" onclick="closeModal()">Cancel</button>
+      <button class="m-btn primary" onclick="saveModal()">Add profile</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DEFAULT_STAFF = [
+  {id:'ryan',    name:'Ryan',    initials:'RD',color:'#E8341A',textColor:'#fff',style:'',picks:[],theme:'dark',accent:'red'},
+  {id:'theo',    name:'Theo',    initials:'TH',color:'#185FA5',textColor:'#fff',style:'',picks:[],theme:'dark',accent:'blue'},
+  {id:'courtney',name:'Courtney',initials:'CT',color:'#1DB87A',textColor:'#fff',style:'',picks:[],theme:'light',accent:'green'},
+  {id:'zach',    name:'Zach',    initials:'ZA',color:'#E07B2A',textColor:'#fff',style:'',picks:[],theme:'dark',accent:'orange'},
+  {id:'spencer', name:'Spencer', initials:'SP',color:'#7C5CBF',textColor:'#fff',style:'',picks:[],theme:'dark',accent:'purple'},
+  {id:'may',     name:'May',     initials:'MY',color:'#3a86c8',textColor:'#fff',style:'',picks:[],theme:'light',accent:'blue'}
+];
+
+let staffData, currentStaff, selectedTopic = '';
+
+function loadStaff(){
+  try{ staffData = JSON.parse(localStorage.getItem('ymca_staff_v4')||'null') || JSON.parse(JSON.stringify(DEFAULT_STAFF)); }
+  catch(e){ staffData = JSON.parse(JSON.stringify(DEFAULT_STAFF)); }
+}
+function saveStaff(){ try{ localStorage.setItem('ymca_staff_v4', JSON.stringify(staffData)); }catch(e){} }
+
+function renderProfileScreen(){
+  const grid = document.getElementById('profileGrid');
+  grid.innerHTML = '';
+  staffData.forEach(s => {
+    const picks = s.picks ? s.picks.length : 0;
+    const card = document.createElement('div');
+    card.className = 'profile-card';
+    card.innerHTML = `
+      <div class="p-avatar" style="background:${s.color};color:${s.textColor}">${s.initials}</div>
+      <div style="flex:1;min-width:0">
+        <div class="p-name">${s.name}</div>
+        ${picks > 0 ? `<div class="p-picks">${picks} pick${picks>1?'s':''} recorded</div>` : ''}
+      </div>`;
+    card.onclick = () => enterApp(s.id);
+    grid.appendChild(card);
+  });
+}
+
+function enterApp(id){
+  currentStaff = staffData.find(s => s.id === id);
+  if(!currentStaff) return;
+  applyUserPrefs(currentStaff);
+  showScreen('appScreen');
+  updateTopbar();
+  updateProfilePanel();
+  document.getElementById('styleInput').value = currentStaff.style || '';
+  resetScreen();
+}
+
+function switchUser(){
+  currentStaff = null;
+  document.body.className = '';
+  showScreen('profileScreen');
+  renderProfileScreen();
+  document.getElementById('settingsPanel').classList.remove('open');
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function applyUserPrefs(s){
+  document.body.className = '';
+  if(s.theme === 'light') document.body.classList.add('light');
+  if(s.accent) document.body.classList.add('accent-' + s.accent);
+  updateAccentDots(s.accent || 'red');
+  updateThemeBtns(s.theme || 'dark');
+}
+
+function setTheme(t){
+  if(!currentStaff) return;
+  currentStaff.theme = t;
+  const s = staffData.find(x => x.id === currentStaff.id);
+  if(s) s.theme = t;
+  saveStaff(); applyUserPrefs(currentStaff);
+}
+
+function setAccent(a){
+  if(!currentStaff) return;
+  currentStaff.accent = a;
+  const s = staffData.find(x => x.id === currentStaff.id);
+  if(s) s.accent = a;
+  saveStaff(); applyUserPrefs(currentStaff);
+}
+
+function saveStyle(){
+  if(!currentStaff) return;
+  const val = document.getElementById('styleInput').value.trim();
+  currentStaff.style = val;
+  const s = staffData.find(x => x.id === currentStaff.id);
+  if(s) s.style = val;
+  saveStaff();
+  updateProfilePanel();
+}
+
+function updateThemeBtns(t){
+  document.getElementById('themeDark').classList.toggle('active', t === 'dark');
+  document.getElementById('themeLight').classList.toggle('active', t === 'light');
+}
+function updateAccentDots(a){
+  document.querySelectorAll('.cdot').forEach(d => d.classList.toggle('active', d.dataset.accent === a));
+}
+function toggleSettings(){ document.getElementById('settingsPanel').classList.toggle('open'); }
+
+function updateTopbar(){
+  if(!currentStaff) return;
+  const av = document.getElementById('topbarAvatar');
+  av.style.background = currentStaff.color;
+  av.style.color = currentStaff.textColor;
+  av.textContent = currentStaff.initials;
+  document.getElementById('topbarName').textContent = currentStaff.name;
+}
+
+function updateProfilePanel(){
+  if(!currentStaff) return;
+  const picks = currentStaff.picks || [];
+  document.getElementById('pickCount').textContent = picks.length;
+  const style = currentStaff.style;
+  const stat = document.getElementById('profileStat');
+  if(style){
+    const learned = describeLearned(currentStaff);
+    stat.innerHTML = `<strong>Mood:</strong> ${learned}`;
+  } else {
+    stat.innerHTML = `<span style="opacity:0.35;font-style:italic">No reply mood set — add one in settings ⚙</span>`;
+  }
+  if(picks.length > 0){
+    const t = {friendly:0,professional:0,brief:0};
+    picks.forEach(p => { if(t[p] !== undefined) t[p]++; });
+    document.getElementById('picksRow').textContent = `Friendly: ${t.friendly} · Professional: ${t.professional} · Brief: ${t.brief}`;
+  } else {
+    document.getElementById('picksRow').textContent = 'No picks yet — style learns as you use it.';
+  }
+}
+
+function describeLearned(s){
+  if(!s.picks || s.picks.length < 3) return s.style;
+  const t = {friendly:0,professional:0,brief:0};
+  s.picks.forEach(p => { if(t[p] !== undefined) t[p]++; });
+  const top = Object.entries(t).sort((a,b) => b[1]-a[1])[0][0];
+  return `${s.style} — tends to prefer <strong>${top}</strong> replies`;
+}
+
+// Topic bar
+document.querySelectorAll('.topic-tag').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedTopic = btn.dataset.topic;
+    document.querySelectorAll('.topic-tag').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+function resetScreen(){
+  document.getElementById('emailInput').value = '';
+  document.getElementById('repliesWrap').style.display = 'none';
+  document.getElementById('tipBox').style.display = 'none';
+  document.getElementById('repliesContainer').innerHTML = '';
+  document.getElementById('statusText').textContent = '';
+  selectedTopic = '';
+  document.querySelectorAll('.topic-tag').forEach(b => b.classList.remove('active'));
+  const all = document.querySelector('.topic-tag[data-topic=""]');
+  if(all) all.classList.add('active');
+}
+
+// Modal
+function openAddModal(){
+  document.getElementById('modalName').value = '';
+  document.getElementById('addModal').classList.add('open');
+  setTimeout(() => document.getElementById('modalName').focus(), 100);
+}
+function closeModal(){
+  document.getElementById('addModal').classList.remove('open');
+}
+function saveModal(){
+  const name = document.getElementById('modalName').value.trim();
+  if(!name){ document.getElementById('modalName').focus(); return; }
+  const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+  const palettes = ['#E8341A','#185FA5','#1DB87A','#E07B2A','#7C5CBF'];
+  const accents  = ['red','blue','green','orange','purple'];
+  const idx = staffData.length % palettes.length;
+  staffData.push({
+    id:'staff_'+Date.now(), name, initials,
+    color:palettes[idx], textColor:'#fff',
+    style:'', picks:[], theme:'dark', accent:accents[idx]
+  });
+  saveStaff(); renderProfileScreen(); closeModal();
+}
+document.getElementById('addModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+// Knowledge base
+const TC = `You are an email reply assistant for The Y Glen Innes Pool & Leisure Centre (YMCA North Incorporated, Auckland NZ).
+
+FACILITY: Glen Innes Pool & Leisure Centre
+Phone: (09) 527 3260 | Swim school: ext 3
+Reception email: gleninnes@ymcaauckland.org.nz
+Swim school email (ONLY for swim school or swimming lesson queries): swim.gleninnes@ymcaauckland.org.nz
+Facilities: 33m lap pool, 20m leisure pool, 15m education pool, spa, sauna, steam room, gym, group exercise room, outdoor zone.
+Spa pool cleaning: fortnightly Thursdays from 11am.
+
+HOURS:
+Gym: Mon-Fri 5:30am-9pm | Sat-Sun 7am-7:30pm
+Pool: Mon-Fri 5:30am-8:45pm | Sat-Sun 7am-7:15pm (pool closes 15min before centre)
+Public holidays: Auckland Anniversary/Waitangi/King's Birthday/Matariki/Labour Day/ANZAC observed: 10am-6pm
+Easter Sunday: 7am-7:30pm | Easter Monday: 10am-6pm | ANZAC Day: 1pm-7:30pm
+CLOSED: Good Friday, Christmas Day, New Year's Day
+
+GROUP EXERCISE TIMETABLE — SUMMER 2026:
+MONDAY: 6:00 Suspension TRX | 9:10 Pilates | 9:15 Aqua Fit (Leisure Pool) | 10:15 Aqua Green (no school holidays) | 10:30 Tai Chi | 11:00 Gold Fit Gym | 11:30 Gold Fit Class | 5:15 Spin 30 | 6:00 Box Fit | 6:30 Aqua Fit (Leisure Pool) | 7:10 Dance Fit | 7:10 HIIT 45 (Outdoor)
+TUESDAY: 6:00 Spin | 7:00 Core 15 | 7:30 Power Yoga | 9:10 SPUMP | 9:30 Aqua Fit | 10:30 Pilates | 6:00 Spin 30 | 6:30 Muscle Max 30 | 7:10 Pilates
+WEDNESDAY: 6:00 Muscle Max+ | 9:10 Spin 30 | 9:30 Aqua Fit | 9:40 Glutes & Core | 10:30 Tai Chi | 11:00 Gold Fit Gym | 5:30 Suspension TRX | 6:30 Zumba | 6:30 Aqua Fit (Leisure Pool) | 7:10 HIIT 45 (Outdoor)
+THURSDAY: 6:00 Spin 45 | 7:30 Suspension TRX | 9:10 Muscle Max | 9:30 Aqua Fit | 10:30 Yoga | 5:15 Pilates | 6:10 Spin 30+Core 15 | 7:10 Yoga
+FRIDAY: 6:00 Suspension TRX | 7:30 Core 15 | 8:00 Power Yoga | 9:10 Zumba | 9:15 Aqua Fit | 10:15 Aqua Green (no school holidays) | 11:00 Gold Fit Gym
+SATURDAY: 7:10 Spin | 8:10 Core 15 | 8:30 Yoga | 9:30 Muscle Max | 10:00 Zumba
+SUNDAY: 7:30 Aqua Fit (Leisure Pool) | 8:30 Spin | 9:30 Muscle Max
+Classes included free with membership or available casually.
+
+MEMBERSHIP CANCELLATION (Clause 4):
+- 14 days written notice to gleninnes@ymcaauckland.org.nz
+- Open/minimum term: cancels from next payment date after 14-day notice
+- Fixed term: ends at expiry of 14 days
+- Early cancellation fees: 0-30 days=$25 | 31-90 days=$50 | 91-180 days=$100 | 180+ days=$150
+- Must still serve and pay 2 weeks even if paying early cancellation fee
+- Medical cancellation: no fee with medical certificate (Clause 4.6)
+- Upfront memberships: no refund for unused time (Clause 4.3)
+
+SUSPENSION (Clause 5):
+- Min 2 weeks, max 8 weeks per calendar year
+- 7 days written notice to gleninnes@ymcaauckland.org.nz
+- Admin fee applies for standard suspension [BLANK - add: current standard suspension admin fee]
+- Medical suspension: free with valid medical certificate
+- Membership resumes automatically at agreed date
+
+TRI-SQUAD SUSPENSION: 5 days notice | fee $10 (<25 days), $25 (25+ days) | min 2 weeks, max 8 weeks
+
+ADULT LEARN TO SWIM:
+- Times: Mon/Tue/Wed evenings 5:50-6:20pm | Sat 12:15-12:45pm | 20m leisure pool | 30 mins
+- Pricing: Weekly DD continuous $26/week | $23/week for 1 permanent day | $34.50/week unlimited sessions+pool entry
+- Cancel: 14 days written notice to swim.gleninnes@ymcaauckland.org.nz
+- School terms only | 2026: T1 Jan 27-Apr 2 | T2 Apr 20-Jul 5 | T3 Jul 20-Sep 27 | T4 Oct 12-Dec 18
+
+TRI-SQUAD:
+- Mon/Wed/Fri mornings 5:45-7am and 7-8:15am | Mon/Wed evenings 6-7:15pm | Sat 7:30-9am
+- Must swim 400m comfortably | ~3-4.8km per session
+- Casual $18 | 10-pass $162 (6 months) | Weekly DD $21.50/week + $29 joining fee (unlimited sessions + pool)
+- Gym NOT included
+
+POOL HIRE:
+- Lap pool (33m): Lane $50/hr + casual admission | Whole pool $350/hr (manager discretion)
+- Leisure pool (22m): Lane $45/hr + casual admission | Whole pool $175/hr
+- Education pool (15m): Whole pool $135/hr
+- Birthday parties: 1.5hrs, adults swim free, lifeguards provided — subject to manager availability
+
+SWIM SCHOOL / COURSES:
+- Cancel 7+ days before start: full refund minus $25 admin fee
+- Cancel <7 days: no refund
+- 1 replacement lesson per term per student (sickness only, written notice BEFORE lesson, book 48hrs ahead)
+- 2+ weeks non-attendance without notice: space may be cancelled, no refund
+
+PAYMENTS:
+- 1 missed payment: access may be suspended
+- 3 missed weekly or 4 weeks monthly unpaid: membership may be terminated
+- Fee changes: 30 days notice
+
+GENERAL:
+- Minimum gym age: 18 years (17 with parent/guardian)
+- Non-transferable memberships | Can transfer between sites (not on term contract)
+- Membership card personal use only | Replacement fee if lost
+- No refund for non-use
+
+For anything not covered above, use: [BLANK - add: what info is needed]`;
+
+async function generateReplies(){
+  const email = document.getElementById('emailInput').value.trim();
+  if(!email){ document.getElementById('statusText').textContent = 'Please paste an email first.'; return; }
+  if(!currentStaff) return;
+
+  const btn = document.getElementById('genBtn');
+  const status = document.getElementById('statusText');
+  const wrap = document.getElementById('repliesWrap');
+  const container = document.getElementById('repliesContainer');
+  const tipBox = document.getElementById('tipBox');
+
+  btn.disabled = true; btn.textContent = 'Generating…';
+  status.textContent = ''; tipBox.style.display = 'none';
+  container.innerHTML = '<div class="loading-state">Reading email and checking T&Cs<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>';
+  wrap.style.display = 'block';
+  wrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+
+  const topicNote = selectedTopic ? `This email is likely about: ${selectedTopic}.` : '';
+  const moodNote = currentStaff.style ? `${currentStaff.name}'s reply mood: ${currentStaff.style}.` : '';
+  const learnedNote = describeLearned(currentStaff);
+
+  const prompt = `${TC}
+
+STAFF: ${currentStaff.name}
+${moodNote}
+${learnedNote !== currentStaff.style ? learnedNote : ''}
+${topicNote}
+
+INCOMING EMAIL:
+${email}
+
+Write exactly 3 reply options:
+- Friendly replies must open with "Kia ora,"
+- All replies signed with "${currentStaff.name}" on its own line, then "The Y Glen Innes Team" on the next line
+- Use gleninnes@ymcaauckland.org.nz for general/membership queries
+- ONLY use swim.gleninnes@ymcaauckland.org.nz if the query is specifically about swim school or swimming lessons
+- Never invent prices or policies — use [BLANK - add: what info is needed] for anything not in the knowledge base
+- Include relevant class times or timetable info if the customer is asking about classes
+
+Write a one-sentence tip for the receptionist about anything worth double-checking before sending.
+
+Return ONLY valid JSON, no markdown fences:
+{"tip":"...","replies":[{"tag":"friendly","text":"..."},{"tag":"professional","text":"..."},{"tag":"brief","text":"..."}]}`;
+
+  try{
+    const res = await fetch('/api/reply', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({model:'claude-sonnet-4-20250514', max_tokens:1500, messages:[{role:'user',content:prompt}]})
+    });
+    const data = await res.json();
+    const raw = (data.content||[]).map(c=>c.text||'').join('');
+    const parsed = JSON.parse(raw.replace(/```json|```/g,'').trim());
+
+    if(parsed.tip){ tipBox.textContent = '💡 ' + parsed.tip; tipBox.style.display = 'block'; }
+
+    container.innerHTML = '';
+    const tagLabels = {friendly:'Warm & friendly', professional:'Professional', brief:'Brief & direct'};
+    const tagClasses = {friendly:'badge-friendly', professional:'badge-professional', brief:'badge-brief'};
+
+    parsed.replies.forEach((reply, i) => {
+      const card = document.createElement('div');
+      card.className = 'reply-card'; card.id = 'reply_' + i;
+      const displayHtml = reply.text.replace(/\[BLANK - add: ([^\]]+)\]/g, '<span class="blank-field">[ $1 ]</span>');
+      card.innerHTML = `
+        <div class="rc-header">
+          <span class="reply-badge ${tagClasses[reply.tag]||'badge-professional'}">${tagLabels[reply.tag]||reply.tag}</span>
+          <button class="a-btn copy" onclick="copyReply(${i},this)">Copy</button>
+        </div>
+        <div class="reply-text" id="rtext_${i}">${displayHtml}</div>
+        <textarea class="edit-area" id="redit_${i}">${reply.text}</textarea>
+        <div class="rc-actions">
+          <button class="a-btn use" onclick="pickReply(${i},'${reply.tag}',this)">✓ Use this reply</button>
+          <button class="a-btn" onclick="toggleEdit(${i},this)">Edit</button>
+        </div>`;
+      container.appendChild(card);
+    });
+    status.textContent = '3 options ready — pick one to copy and use.';
+  } catch(e){
+    container.innerHTML = '<div class="loading-state" style="color:#f08070">Error generating replies. Check connection and try again.</div>';
+  }
+  btn.disabled = false; btn.textContent = 'Generate reply options';
+}
+
+function pickReply(idx, tag, btn){
+  document.querySelectorAll('.reply-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('reply_'+idx).classList.add('selected');
+  if(currentStaff){
+    if(!currentStaff.picks) currentStaff.picks = [];
+    currentStaff.picks.push(tag);
+    const s = staffData.find(x => x.id === currentStaff.id);
+    if(s) s.picks = currentStaff.picks;
+    saveStaff(); updateProfilePanel();
+  }
+  copyReply(idx, null);
+  document.getElementById('statusText').textContent = '✓ Copied to clipboard — pick recorded.';
+  const orig = btn.textContent; btn.textContent = '✓ Copied!';
+  setTimeout(() => { btn.textContent = orig; }, 1800);
+}
+
+function copyReply(idx, btn){
+  const edit = document.getElementById('redit_'+idx);
+  const display = document.getElementById('rtext_'+idx);
+  const text = edit.style.display === 'block' ? edit.value : display.innerText;
+  navigator.clipboard.writeText(text).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+  });
+  if(btn){ const orig = btn.textContent; btn.textContent = 'Copied!'; setTimeout(() => { btn.textContent = orig; }, 1500); }
+}
+
+function toggleEdit(idx, btn){
+  const edit = document.getElementById('redit_'+idx);
+  const display = document.getElementById('rtext_'+idx);
+  if(edit.style.display === 'block'){
+    display.innerHTML = edit.value.replace(/\[BLANK - add: ([^\]]+)\]/g, '<span class="blank-field">[ $1 ]</span>');
+    edit.style.display = 'none'; display.style.display = 'block'; btn.textContent = 'Edit';
+  } else {
+    edit.value = display.innerText; edit.style.display = 'block'; display.style.display = 'none';
+    btn.textContent = 'Done editing'; edit.focus();
+  }
+}
+
+loadStaff();
+renderProfileScreen();
+</script>
+</body>
+</html>

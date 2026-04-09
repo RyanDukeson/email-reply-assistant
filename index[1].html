@@ -31,22 +31,12 @@
   --radius-sm: 9px;
 }
 .light {
-  --bg: #f0eeeb;
-  --bg2: #e8e5e1;
-  --bg3: #dedad5;
-  --border: rgba(0,0,0,0.09);
-  --text: #1a1a1a;
-  --text2: #555;
-  --text3: #999;
-  --card: #ffffff;
-  --input-bg: #f8f6f3;
-  --shadow: 0 4px 24px rgba(0,0,0,0.08);
-  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-  --tip-bg: rgba(24,95,165,0.08);
-  --tip-text: #0C447C;
-  --blank-bg: rgba(232,52,26,0.07);
-  --blank-border: rgba(232,52,26,0.3);
-  --blank-text: #c0391a;
+  --bg: #f0eeeb; --bg2: #e8e5e1; --bg3: #dedad5;
+  --border: rgba(0,0,0,0.09); --text: #1a1a1a; --text2: #555; --text3: #999;
+  --card: #ffffff; --input-bg: #f8f6f3;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08); --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --tip-bg: rgba(24,95,165,0.08); --tip-text: #0C447C;
+  --blank-bg: rgba(232,52,26,0.07); --blank-border: rgba(232,52,26,0.3); --blank-text: #c0391a;
 }
 .accent-blue   { --accent: #185FA5; }
 .accent-green  { --accent: #1DB87A; }
@@ -57,7 +47,6 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 html,body{height:100%;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);transition:background 0.3s,color 0.3s;min-height:100vh;}
-
 .screen{display:none;min-height:100vh;}
 .screen.active{display:flex;flex-direction:column;}
 
@@ -71,7 +60,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);tra
 .app-title .subtitle{font-size:13px;color:var(--text3);margin-top:6px;}
 .facility-tag{display:inline-block;margin-top:10px;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent2);background:rgba(24,95,165,0.12);padding:4px 12px;border-radius:20px;}
 .light .facility-tag{background:rgba(24,95,165,0.1);}
-
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
 .profile-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.15rem;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:13px;animation:fadeUp 0.5s ease both;box-shadow:var(--shadow-sm);}
 .profile-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow);}
@@ -79,7 +67,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);tra
 .p-avatar{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0;}
 .p-name{font-size:16px;font-weight:600;color:var(--text);}
 .p-picks{font-size:10px;color:var(--accent);margin-top:3px;font-weight:500;}
-
 .add-profile-btn{width:100%;background:var(--bg2);border:1px dashed var(--border);border-radius:var(--radius);padding:0.9rem;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--text3);display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.18s;animation:fadeUp 0.5s ease 0.3s both;}
 .add-profile-btn:hover{border-color:var(--accent);color:var(--accent);}
 .add-profile-btn:active{transform:scale(0.97);}
@@ -100,7 +87,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);tra
 .switch-btn{font-size:12px;font-weight:500;padding:6px 12px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);cursor:pointer;color:var(--text2);font-family:inherit;transition:all 0.15s;white-space:nowrap;}
 .switch-btn:hover{border-color:var(--accent);color:var(--accent);}
 .switch-btn:active{transform:scale(0.95);}
-
 .app-body{max-width:860px;margin:0 auto;padding:1.25rem 1rem 3rem;}
 
 /* SETTINGS */
@@ -180,20 +166,32 @@ textarea::placeholder{color:var(--text3);}
 .a-btn.use:hover{opacity:0.85;}
 .a-btn.copy{margin-left:auto;}
 
-/* MODAL */
+/* MEMBERSHIP POPUP */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);align-items:center;justify-content:center;z-index:999;display:none;backdrop-filter:blur(4px);}
 .modal-overlay.open{display:flex;}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;width:90%;max-width:370px;box-shadow:var(--shadow);animation:fadeUp 0.2s ease;}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;width:90%;max-width:420px;box-shadow:var(--shadow);animation:fadeUp 0.2s ease;}
 .modal h3{font-size:16px;font-weight:600;margin-bottom:5px;color:var(--text);}
-.modal p{font-size:13px;color:var(--text2);margin-bottom:14px;}
+.modal p{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.5;}
 .modal input{width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;font-family:inherit;color:var(--text);outline:none;margin-bottom:9px;transition:border-color 0.15s;}
 .modal input:focus{border-color:var(--accent);}
 .modal input:disabled{opacity:0.4;}
-.modal-btns{display:flex;gap:8px;}
+.modal-btns{display:flex;gap:8px;margin-top:4px;}
 .m-btn{flex:1;padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:inherit;transition:all 0.15s;}
 .m-btn:active{transform:scale(0.95);}
 .m-btn.primary{background:var(--accent);border-color:var(--accent);color:white;}
 .m-btn.primary:hover{opacity:0.88;}
+
+/* Option button grid for popup */
+.opt-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;margin-top:14px;}
+.opt-label:first-of-type{margin-top:0;}
+.opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:4px;}
+.opt-grid.cols3{grid-template-columns:1fr 1fr 1fr;}
+.opt-btn{padding:9px 10px;border-radius:var(--radius-sm);font-size:12px;font-weight:500;border:1px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;font-family:inherit;transition:all 0.15s;text-align:center;}
+.opt-btn:hover{border-color:var(--accent);color:var(--accent);}
+.opt-btn:active{transform:scale(0.93);}
+.opt-btn.selected{background:var(--accent);border-color:var(--accent);color:white;}
+.conditional-section{display:none;animation:fadeUp 0.2s ease;}
+.conditional-section.visible{display:block;}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
@@ -241,7 +239,6 @@ textarea::placeholder{color:var(--text3);}
   </div>
 
   <div class="app-body">
-
     <div class="settings-panel" id="settingsPanel">
       <div class="s-title">Your preferences</div>
       <div class="s-row">
@@ -282,7 +279,7 @@ textarea::placeholder{color:var(--text3);}
       <div class="panel">
         <div class="p-label">Paste incoming email</div>
         <textarea id="emailInput" rows="10" placeholder="Paste the customer's email here...&#10;&#10;e.g. Hi, I'd like to suspend my membership..."></textarea>
-        <button class="gen-btn" id="genBtn" onclick="generateReplies()">Generate reply options</button>
+        <button class="gen-btn" id="genBtn" onclick="handleGenerate()">Generate reply options</button>
         <div class="status-text" id="statusText"></div>
       </div>
       <div class="panel">
@@ -302,18 +299,56 @@ textarea::placeholder{color:var(--text3);}
       <div class="tip-box" id="tipBox" style="display:none"></div>
       <div id="repliesContainer"></div>
     </div>
-
   </div>
 </div>
 
-<!-- Add staff modal -->
+<!-- MEMBERSHIP DETAILS POPUP -->
+<div class="modal-overlay" id="membershipModal">
+  <div class="modal">
+    <h3>Check their membership</h3>
+    <p>This reply depends on the member's details. Check ENVIBE and select below.</p>
+
+    <div class="opt-label">Membership type</div>
+    <div class="opt-grid">
+      <button class="opt-btn" data-group="type" data-value="open term" onclick="selectOpt(this,'type')">Open term</button>
+      <button class="opt-btn" data-group="type" data-value="minimum term" onclick="selectOpt(this,'type')">Minimum term</button>
+      <button class="opt-btn" data-group="type" data-value="fixed term" onclick="selectOpt(this,'type')">Fixed term</button>
+      <button class="opt-btn" data-group="type" data-value="upfront" onclick="selectOpt(this,'type')">Upfront</button>
+    </div>
+
+    <div class="conditional-section" id="daysSection">
+      <div class="opt-label">Days remaining on term</div>
+      <div class="opt-grid cols3">
+        <button class="opt-btn" data-group="days" data-value="0-30 days remaining" onclick="selectOpt(this,'days')">0–30 days</button>
+        <button class="opt-btn" data-group="days" data-value="31-90 days remaining" onclick="selectOpt(this,'days')">31–90 days</button>
+        <button class="opt-btn" data-group="days" data-value="91-180 days remaining" onclick="selectOpt(this,'days')">91–180 days</button>
+        <button class="opt-btn" data-group="days" data-value="180+ days remaining" onclick="selectOpt(this,'days')">180+ days</button>
+      </div>
+    </div>
+
+    <div class="conditional-section" id="paymentSection">
+      <div class="opt-label">Payment status</div>
+      <div class="opt-grid">
+        <button class="opt-btn" data-group="payment" data-value="payments are up to date" onclick="selectOpt(this,'payment')">Up to date</button>
+        <button class="opt-btn" data-group="payment" data-value="has missed payments" onclick="selectOpt(this,'payment')">Missed payments</button>
+      </div>
+    </div>
+
+    <div class="modal-btns" style="margin-top:16px;">
+      <button class="m-btn" onclick="closeMembershipModal()">Cancel</button>
+      <button class="m-btn primary" id="membershipConfirmBtn" onclick="confirmMembership()">Generate replies</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STAFF MODAL -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
-    <h3 id="modalTitle">Add staff profile</h3>
-    <p id="modalDesc">Enter the name for the new staff member.</p>
+    <h3>Add staff profile</h3>
+    <p>Enter the name for the new staff member.</p>
     <input type="text" id="modalName" placeholder="Full name" />
     <div class="modal-btns">
-      <button class="m-btn" onclick="closeModal()">Cancel</button>
+      <button class="m-btn" onclick="closeAddModal()">Cancel</button>
       <button class="m-btn primary" onclick="saveModal()">Add profile</button>
     </div>
   </div>
@@ -330,6 +365,7 @@ const DEFAULT_STAFF = [
 ];
 
 let staffData, currentStaff, selectedTopic = '';
+let membershipContext = {};
 
 function loadStaff(){
   try{ staffData = JSON.parse(localStorage.getItem('ymca_staff_v4')||'null') || JSON.parse(JSON.stringify(DEFAULT_STAFF)); }
@@ -409,8 +445,7 @@ function saveStyle(){
   currentStaff.style = val;
   const s = staffData.find(x => x.id === currentStaff.id);
   if(s) s.style = val;
-  saveStaff();
-  updateProfilePanel();
+  saveStaff(); updateProfilePanel();
 }
 
 function updateThemeBtns(t){
@@ -435,11 +470,9 @@ function updateProfilePanel(){
   if(!currentStaff) return;
   const picks = currentStaff.picks || [];
   document.getElementById('pickCount').textContent = picks.length;
-  const style = currentStaff.style;
   const stat = document.getElementById('profileStat');
-  if(style){
-    const learned = describeLearned(currentStaff);
-    stat.innerHTML = `<strong>Mood:</strong> ${learned}`;
+  if(currentStaff.style){
+    stat.innerHTML = `<strong>Mood:</strong> ${describeLearned(currentStaff)}`;
   } else {
     stat.innerHTML = `<span style="opacity:0.35;font-style:italic">No reply mood set — add one in settings ⚙</span>`;
   }
@@ -476,20 +509,88 @@ function resetScreen(){
   document.getElementById('repliesContainer').innerHTML = '';
   document.getElementById('statusText').textContent = '';
   selectedTopic = '';
+  membershipContext = {};
   document.querySelectorAll('.topic-tag').forEach(b => b.classList.remove('active'));
   const all = document.querySelector('.topic-tag[data-topic=""]');
   if(all) all.classList.add('active');
 }
 
-// Modal
+// ---- MEMBERSHIP POPUP ----
+const NEEDS_MEMBERSHIP_CHECK = [
+  'cancel', 'cancellation', 'suspend', 'suspension', 'freeze', 'hold',
+  'fee', 'fees', 'penalty', 'charge', 'early', 'term', 'refund',
+  'notice', 'notice period', 'end my membership', 'leave', 'stop my membership',
+  'how long', 'cost to cancel', 'cost to suspend'
+];
+
+function emailNeedsMembershipCheck(email){
+  const lower = email.toLowerCase();
+  return NEEDS_MEMBERSHIP_CHECK.some(kw => lower.includes(kw));
+}
+
+function handleGenerate(){
+  const email = document.getElementById('emailInput').value.trim();
+  if(!email){ document.getElementById('statusText').textContent = 'Please paste an email first.'; return; }
+  if(!currentStaff) return;
+
+  if(emailNeedsMembershipCheck(email)){
+    openMembershipModal();
+  } else {
+    generateReplies(null);
+  }
+}
+
+function openMembershipModal(){
+  // Reset all selections
+  membershipContext = {};
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('daysSection').classList.remove('visible');
+  document.getElementById('paymentSection').classList.remove('visible');
+  document.getElementById('membershipModal').classList.add('open');
+}
+
+function closeMembershipModal(){
+  document.getElementById('membershipModal').classList.remove('open');
+}
+
+function selectOpt(btn, group){
+  document.querySelectorAll(`.opt-btn[data-group="${group}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  membershipContext[group] = btn.dataset.value;
+
+  // Show conditional sections based on membership type
+  if(group === 'type'){
+    const needsDays = ['minimum term','fixed term'].includes(btn.dataset.value);
+    const needsPayment = ['open term','minimum term','fixed term'].includes(btn.dataset.value);
+    document.getElementById('daysSection').classList.toggle('visible', needsDays);
+    document.getElementById('paymentSection').classList.toggle('visible', needsPayment);
+    // Clear days/payment if type changed
+    if(!needsDays) delete membershipContext.days;
+    if(!needsPayment) delete membershipContext.payment;
+    document.querySelectorAll('.opt-btn[data-group="days"], .opt-btn[data-group="payment"]').forEach(b => b.classList.remove('selected'));
+  }
+}
+
+function confirmMembership(){
+  if(!membershipContext.type){
+    alert('Please select a membership type.');
+    return;
+  }
+  closeMembershipModal();
+  generateReplies(membershipContext);
+}
+
+document.getElementById('membershipModal').addEventListener('click', function(e){
+  if(e.target === this) closeMembershipModal();
+});
+
+// ---- ADD STAFF MODAL ----
 function openAddModal(){
   document.getElementById('modalName').value = '';
   document.getElementById('addModal').classList.add('open');
   setTimeout(() => document.getElementById('modalName').focus(), 100);
 }
-function closeModal(){
-  document.getElementById('addModal').classList.remove('open');
-}
+function closeAddModal(){ document.getElementById('addModal').classList.remove('open'); }
 function saveModal(){
   const name = document.getElementById('modalName').value.trim();
   if(!name){ document.getElementById('modalName').focus(); return; }
@@ -497,17 +598,13 @@ function saveModal(){
   const palettes = ['#E8341A','#185FA5','#1DB87A','#E07B2A','#7C5CBF'];
   const accents  = ['red','blue','green','orange','purple'];
   const idx = staffData.length % palettes.length;
-  staffData.push({
-    id:'staff_'+Date.now(), name, initials,
-    color:palettes[idx], textColor:'#fff',
-    style:'', picks:[], theme:'dark', accent:accents[idx]
-  });
-  saveStaff(); renderProfileScreen(); closeModal();
+  staffData.push({id:'staff_'+Date.now(),name,initials,color:palettes[idx],textColor:'#fff',style:'',picks:[],theme:'dark',accent:accents[idx]});
+  saveStaff(); renderProfileScreen(); closeAddModal();
 }
-document.getElementById('addModal').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+document.getElementById('addModal').addEventListener('click', function(e){ if(e.target===this) closeAddModal(); });
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeMembershipModal(); closeAddModal(); }});
 
-// Knowledge base
+// ---- KNOWLEDGE BASE ----
 const TC = `You are an email reply assistant for The Y Glen Innes Pool & Leisure Centre (YMCA North Incorporated, Auckland NZ).
 
 FACILITY: Glen Innes Pool & Leisure Centre
@@ -589,10 +686,10 @@ GENERAL:
 
 For anything not covered above, use: [BLANK - add: what info is needed]`;
 
-async function generateReplies(){
+// ---- GENERATE ----
+async function generateReplies(memberCtx){
   const email = document.getElementById('emailInput').value.trim();
-  if(!email){ document.getElementById('statusText').textContent = 'Please paste an email first.'; return; }
-  if(!currentStaff) return;
+  if(!email || !currentStaff) return;
 
   const btn = document.getElementById('genBtn');
   const status = document.getElementById('statusText');
@@ -608,14 +705,22 @@ async function generateReplies(){
 
   const topicNote = selectedTopic ? `This email is likely about: ${selectedTopic}.` : '';
   const moodNote = currentStaff.style ? `${currentStaff.name}'s reply mood: ${currentStaff.style}.` : '';
-  const learnedNote = describeLearned(currentStaff);
+
+  let memberNote = '';
+  if(memberCtx && memberCtx.type){
+    memberNote = `MEMBER'S ACCOUNT DETAILS (confirmed by receptionist from ENVIBE):
+- Membership type: ${memberCtx.type}
+${memberCtx.days ? `- ${memberCtx.days}` : ''}
+${memberCtx.payment ? `- Payment status: ${memberCtx.payment}` : ''}
+Use these specifics to give an accurate, personalised reply — do not give generic advice covering all scenarios.`;
+  }
 
   const prompt = `${TC}
 
 STAFF: ${currentStaff.name}
 ${moodNote}
-${learnedNote !== currentStaff.style ? learnedNote : ''}
 ${topicNote}
+${memberNote}
 
 INCOMING EMAIL:
 ${email}
@@ -626,6 +731,7 @@ Write exactly 3 reply options:
 - Use gleninnes@ymcaauckland.org.nz for general/membership queries
 - ONLY use swim.gleninnes@ymcaauckland.org.nz if the query is specifically about swim school or swimming lessons
 - Never invent prices or policies — use [BLANK - add: what info is needed] for anything not in the knowledge base
+- If member details are provided above, use them to give a specific accurate reply rather than covering all possible scenarios
 - Include relevant class times or timetable info if the customer is asking about classes
 
 Write a one-sentence tip for the receptionist about anything worth double-checking before sending.
